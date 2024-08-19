@@ -1,0 +1,89 @@
+<configuration>
+    <!--    設置變數，將檔案位置設為./logs-->
+    <property name="LOG_PATH" value="./logs" />
+    <!-- 定義通用的 Pattern -->
+    <property name="COMMON_PATTERN" value="%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n" />
+    <!-- 定義通用的 RollingPolicy -->
+    <property name="ROLLING_POLICY" value="ch.qos.logback.core.rolling.TimeBasedRollingPolicy" />
+    <!-- 定義通用的 MaxHistory -->
+    <property name="MAX_HISTORY" value="30" />
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <!--用ThresholdFilter過濾ERROR以上級別才顯示在terminal上~-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <!-- 印出Log的格式 -->
+            <!-- %d{YYYY-MM-dd HH: mm:ss.SSS} log 時間 -->
+            <!-- %thread 執行緒名字 -->
+            <!-- %highlight 顯示高亮顏色 -->
+            <!-- %-5level log級別且顯示5個字，靠左對齊 -->
+            <!-- %logger log的名字 -->
+            <!-- %msg log訊息 -->
+            <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} [%thread] %highlight(%-5level) %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="${ROLLING_POLICY}">
+            <!-- 輸出文件的位置，以每一天做切割-->
+            <fileNamePattern>${LOG_PATH}/Detail/logback.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!--保留30天的歷史紀錄 -->
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
+        <!--INFO以上級別都輸出至檔案-->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <!--Log的格式-->
+            <pattern>${COMMON_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="Warn_file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="${ROLLING_POLICY}">
+            <!-- 輸出文件的位置，以每一天做切割-->
+            <fileNamePattern>${LOG_PATH}/WARN/logback.%d{yyyy-MM-dd}_WARN.log</fileNamePattern>
+            <!--保留30天的歷史紀錄 -->
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
+        <!--設定WARN級別才輸出至檔案-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <!--Log的格式-->
+            <pattern>${COMMON_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="Error_file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="${ROLLING_POLICY}">
+            <!-- 輸出文件的位置，以每一天做切割-->
+            <fileNamePattern>${LOG_PATH}/ERROR/logback.%d{yyyy-MM-dd}_ERROR.log</fileNamePattern>
+            <!--保留30天的歷史紀錄 -->
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+        </rollingPolicy>
+        <!--設定Error級別才輸出至檔案-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>Error</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <!--Log的格式-->
+            <pattern>${COMMON_PATTERN}</pattern>
+        </encoder>
+    </appender>
+    <root level="INFO">
+        <!--把appender加上去-->
+        <appender-ref ref="console" />
+        <appender-ref ref="file" />
+        <appender-ref ref="Warn_file" />
+        <appender-ref ref="Error_file" />
+    </root>
+</configuration>
