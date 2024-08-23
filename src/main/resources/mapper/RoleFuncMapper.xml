@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="tw.idv.frank.simple_standard_law.schema.system.model.dao.RoleFuncMapper">
+  <resultMap id="BaseResultMap" type="tw.idv.frank.simple_standard_law.schema.system.model.entity.RoleFunc">
+    <id column="role_func_id" jdbcType="INTEGER" property="roleFuncId" />
+    <result column="role_id" jdbcType="INTEGER" property="roleId" />
+    <result column="func_id" jdbcType="INTEGER" property="funcId" />
+    <result column="level" jdbcType="CHAR" property="level" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+
+  <select id="findUsersFuncByUsersId" parameterType="java.lang.Integer" resultType="tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersFunc">
+    SELECT f.func_name || '_' || rf.level as authority FROM system.users_role ur
+    inner join system.role_func rf on ur.role_id = rf.role_id
+    inner join system.role r on rf.role_id = r.role_id
+    inner join system.func f on rf.func_id = f.func_id
+    where ur.user_id = #{user_id};
+  </select>
+</mapper>

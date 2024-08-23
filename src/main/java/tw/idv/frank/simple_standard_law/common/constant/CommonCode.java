@@ -17,7 +17,9 @@ public enum CommonCode {
 
     DELETE(200,"刪除成功!"),
 
-    ERROR(400, "發生錯誤!"),
+    ERROR_999(500, "系統發生未知錯誤!"),
+
+    DB_ERROR(500, "資料庫發生未知錯誤!"),
 
     INSUFFICIENT_PERMISSIONS(403, "權限不足!"),
 
@@ -25,13 +27,13 @@ public enum CommonCode {
 
     RE_LOGIN(401, "請重新登入!"),
 
-    N901(400, "帳號已存在!"),
+    ERROR_901(400, "帳號已存在!"),
 
-    N902(400, "Manager不存在!"),
+    ERROR_902(400, "Manager不存在!"),
 
-    N903(400, "Role: 僅能為 'ADMIN' 或 'MANAGER'"),
+    ERROR_903(400, "Role: 僅能為 'ADMIN' 或 'MANAGER'"),
 
-    N904(400, "查無相關資訊!"),
+    ERROR_904(400, "查無相關資訊!"),
 
     PARAMETER_ERROR(400,"請求的參數未通過檢查規則!"),
 
@@ -41,7 +43,7 @@ public enum CommonCode {
 
     LOGIN_ERROR(400, "帳號或密碼錯誤!"),
 
-    U901(400, "信箱已註冊過!"),
+    U901(400, "帳號已存在!"),
 
     U902(400, "使用者不存在!"),
 
