@@ -10,7 +10,7 @@ CREATE TABLE system.users (
 DROP TABLE IF EXISTS system.role CASCADE;
 CREATE TABLE system.role (
 	role_id serial primary key,
-	role_name varchar(30) not null,
+	role_name varchar(30) not null UNIQUE,
 	create_time timestamp DEFAULT NOW()
 );
 
@@ -25,7 +25,7 @@ CREATE TABLE system.users_role (
 DROP TABLE IF EXISTS system.func CASCADE;
 CREATE TABLE system.func (
 	func_id serial primary key,
-	func_name varchar(30) not null,
+	func_name varchar(30) not null UNIQUE,
 	create_time timestamp DEFAULT NOW()
 );
 

@@ -11,7 +11,7 @@ public class ResponseTool {
     public static void getRes(HttpServletResponse response, CommonCode code) throws IOException {
 
         // 設置響應狀態碼為 403 Forbidden
-        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        response.setStatus(code.getCode());
         // 設置響應的內容類型為 JSON
         response.setContentType("application/json");
         // 設置響應的內容類型為 UTF-8

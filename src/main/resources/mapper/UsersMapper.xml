@@ -9,6 +9,12 @@
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
+  <sql id="Base_Column_List">
+    user_id, user_name, account, password, create_time
+  </sql>
+  <sql id="UsersRes">
+    user_id, user_name, account, create_time
+  </sql>
 
   <insert id="usersRegister" parameterType="tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersRegisterReq" keyProperty="userId" useGeneratedKeys="true">
     insert into system.users (user_name, account, password)
@@ -16,17 +22,29 @@
   </insert>
 
   <select id="findById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select * from system.users
+    select 
+      <include refid="Base_Column_List" />
+    from system.users
     where user_id = #{userId}
   </select>
 
   <select id="findByAccount" parameterType="java.lang.String" resultMap="BaseResultMap">
-    select * from system.users
+    select
+      <include refid="Base_Column_List" />
+    from system.users
     where account = #{account}
   </select>
 
-  <select id="usersLogin" parameterType="tw.idv.frank.simple_standard_law.common.dto.LoginReq" resultMap="BaseResultMap">
-    select * from system.users
-    where account = #{account} and password = #{account}
+  <select id="findUsersList" resultMap="BaseResultMap">
+    select
+      <include refid="UsersRes" />
+    from system.users
+  </select>
+
+  <select id="findByUserId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+      <include refid="UsersRes" />
+    from system.users
+      where user_id = #{user_id}
   </select>
 </mapper>

@@ -1,9 +1,11 @@
 package tw.idv.frank.simple_standard_law.schema.system.model.dao;
 
 import org.apache.ibatis.annotations.Mapper;
-import tw.idv.frank.simple_standard_law.common.dto.LoginReq;
 import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersRegisterReq;
+import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersRes;
 import tw.idv.frank.simple_standard_law.schema.system.model.entity.Users;
+
+import java.util.List;
 
 @Mapper
 public interface UsersMapper {
@@ -14,5 +16,7 @@ public interface UsersMapper {
 
     Users findByAccount(String account);
 
-    Users usersLogin(LoginReq req);
+    List<Users> findUsersList();
+
+    Users findByUserId(Integer userId);
 }

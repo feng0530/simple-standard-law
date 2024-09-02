@@ -1,82 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="tw.idv.frank.simple_standard_law.schema.system.model.dao.UsersRoleMapper">
+
   <resultMap id="BaseResultMap" type="tw.idv.frank.simple_standard_law.schema.system.model.entity.UsersRole">
     <id column="user_role_id" jdbcType="INTEGER" property="userRoleId" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="role_id" jdbcType="INTEGER" property="roleId" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
-  <sql id="Base_Column_List">
-    user_role_id, user_id, role_id, create_time
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from system.users_role
-    where user_role_id = #{userRoleId,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from system.users_role
-    where user_role_id = #{userRoleId,jdbcType=INTEGER}
+
+  <resultMap id="UsersRoleResResultMap" type="tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersRoleRes">
+    <id column="user_Id" jdbcType="INTEGER" property="userId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <collection property="roleList" ofType="tw.idv.frank.simple_standard_law.schema.system.model.dto.UserRoleDto" javaType="java.util.ArrayList" >
+      <result column="role_id" jdbcType="INTEGER" property="roleId"/>
+      <result column="role_name" jdbcType="VARCHAR" property="roleName"/>
+      <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </collection>
+  </resultMap>
+
+  <insert id="addUsersRole" parameterType="tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersRoleReq">
+    <if test="roleIdList != null and roleIdList.size() > 0">
+      INSERT INTO system.users_role (user_id, role_id) VALUES
+      <foreach collection="roleIdList" item="roleId" separator=",">
+        (#{userId}, #{roleId})
+      </foreach>
+    </if>
+  </insert>
+
+  <delete id="deleteByUserId" parameterType="java.lang.Integer">
+    delete from system.users_role where user_id = #{user_id}
   </delete>
-  <insert id="insert" parameterType="tw.idv.frank.simple_standard_law.schema.system.model.entity.UsersRole">
-    insert into system.users_role (user_role_id, user_id, role_id, 
-      create_time)
-    values (#{userRoleId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP})
-  </insert>
-  <insert id="insertSelective" parameterType="tw.idv.frank.simple_standard_law.schema.system.model.entity.UsersRole">
-    insert into system.users_role
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="userRoleId != null">
-        user_role_id,
-      </if>
-      <if test="userId != null">
-        user_id,
-      </if>
-      <if test="roleId != null">
-        role_id,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="userRoleId != null">
-        #{userRoleId,jdbcType=INTEGER},
-      </if>
-      <if test="userId != null">
-        #{userId,jdbcType=INTEGER},
-      </if>
-      <if test="roleId != null">
-        #{roleId,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="tw.idv.frank.simple_standard_law.schema.system.model.entity.UsersRole">
-    update system.users_role
-    <set>
-      <if test="userId != null">
-        user_id = #{userId,jdbcType=INTEGER},
-      </if>
-      <if test="roleId != null">
-        role_id = #{roleId,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where user_role_id = #{userRoleId,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="tw.idv.frank.simple_standard_law.schema.system.model.entity.UsersRole">
-    update system.users_role
-    set user_id = #{userId,jdbcType=INTEGER},
-      role_id = #{roleId,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
-    where user_role_id = #{userRoleId,jdbcType=INTEGER}
-  </update>
+
+  <select id="findUsersRoleByUserId" parameterType="java.lang.Integer" resultMap="UsersRoleResResultMap">
+    select u.user_id, u.user_name, r.role_id, r.role_name, ur.create_time from system.users_role ur
+      inner join system.users u on ur.user_id = u.user_id
+      inner join system.role r on ur.role_id = r.role_id
+    where ur.user_id = #{user_id} order by r.create_time;
+  </select>
+
 </mapper>

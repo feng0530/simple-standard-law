@@ -1,18 +1,14 @@
-package tw.idv.frank.simple_standard_law.schema.system.model.dao;
+package tw.idv.frank.simple_standard_law.schema.system.service;
 
-import org.apache.ibatis.annotations.Mapper;
 import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersRoleReq;
 import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersRoleRes;
 
 import java.util.List;
 
 
-@Mapper
-public interface UsersRoleMapper {
+public interface UsersRoleService {
 
-    void addUsersRole(UsersRoleReq req);
-
-    void deleteByUserId(Integer usersId);
+    void updateUsersRole(UsersRoleReq req);
 
     List<UsersRoleRes> findUsersRoleByUserId(Integer userId);
 }

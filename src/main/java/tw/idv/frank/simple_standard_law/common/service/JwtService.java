@@ -7,12 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.pulsar.PulsarAutoConfiguration;
 import org.springframework.stereotype.Service;
-import tw.idv.frank.simple_standard_law.common.dto.LoginReq;
-import tw.idv.frank.simple_standard_law.common.dto.LoginRes;
 import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersDetails;
-import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersFunc;
 import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersRes;
 
 import java.security.Key;
@@ -81,6 +77,7 @@ public class JwtService {
                 .setSubject("Access Token")
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMillis))
+                .claim("userId", usersRes.getUserId())
                 .claim("user", usersRes)
                 .claim("authorities", usersDetails.getAuthorities())
                 .signWith(secretKey)

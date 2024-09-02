@@ -23,6 +23,8 @@ import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersRes;
 import tw.idv.frank.simple_standard_law.schema.system.model.entity.Users;
 import tw.idv.frank.simple_standard_law.schema.system.service.UsersService;
 
+import java.util.List;
+
 @Slf4j
 @Service
 public class UsersServiceImpl implements UsersService {
@@ -47,7 +49,7 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public UsersRes usersRegister(UsersRegisterReq req) throws BaseException {
-        validAccountExist(req.getAccount());
+//        validAccountExist(req.getAccount());
         return register(req);
     }
 
@@ -61,6 +63,20 @@ public class UsersServiceImpl implements UsersService {
     public void usersLogout(HttpServletRequest req) {
         String jwt = req.getHeader("Authorization").substring("Bearer ".length());
         jwtBlackListService.addJwtToBlackList(jwt);
+    }
+
+    @Override
+    public List<UsersRes> findUsersList() {
+        return usersMapper.findUsersList()
+                .stream()
+                .map(user -> modelMapper.map(user, UsersRes.class))
+                .toList();
+    }
+
+    @Override
+    public UsersRes findByUserId(Integer userId) {
+        // 待修正 userId不存在
+        return modelMapper.map(usersMapper.findByUserId(userId), UsersRes.class);
     }
 
     private UsersDetails authentication(LoginReq req) {

@@ -7,6 +7,8 @@ import tw.idv.frank.simple_standard_law.common.exception.BaseException;
 import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersRegisterReq;
 import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersRes;
 
+import java.util.List;
+
 public interface UsersService {
 
     UsersRes usersRegister(UsersRegisterReq req) throws BaseException;
@@ -14,4 +16,8 @@ public interface UsersService {
     LoginRes usersLogin(LoginReq req);
 
     void usersLogout(HttpServletRequest req);
+
+    List<UsersRes> findUsersList();
+
+    UsersRes findByUserId(Integer userId);
 }

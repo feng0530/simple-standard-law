@@ -2,6 +2,7 @@ package tw.idv.frank.simple_standard_law.common.exception;
 
 import jakarta.validation.UnexpectedTypeException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -15,6 +16,8 @@ import tw.idv.frank.simple_standard_law.common.constant.CommonCode;
 import tw.idv.frank.simple_standard_law.common.dto.CommonResult;
 
 import java.sql.SQLException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Slf4j
 @RestControllerAdvice
@@ -57,9 +60,29 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler({SQLException.class})
-    public CommonResult parameterTypeExceptionHandler(Exception e) {
-        log.error(e.getMessage());
-        return new CommonResult(CommonCode.DB_ERROR, e.getMessage());
+    public CommonResult SqlExceptionHandler(Exception e) {
+        String eMsg = e.getCause().getMessage();
+        log.error(eMsg);
+
+        String msg = getAlreadyExistsMsg(eMsg);
+        if(msg != null){
+            return new CommonResult(HttpStatus.BAD_REQUEST.value(), msg);
+        }
+        return new CommonResult(CommonCode.DB_ERROR, eMsg);
+    }
+
+    private String getAlreadyExistsMsg(String msg) {
+        // Key (str1)=(str2) already exists
+        // 此正則表達式設定了捕獲 str2的值
+        String regex = "Key \\([^\\)]+\\)=\\(([^)]+)\\) already exists";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(msg);
+
+        if (matcher.find()) {
+            return "[%s] already exists".formatted(matcher.group(1));
+        }else {
+            return null;
+        }
     }
 
     /**

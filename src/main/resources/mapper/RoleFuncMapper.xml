@@ -9,11 +9,43 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
 
-  <select id="findUsersFuncByUsersId" parameterType="java.lang.Integer" resultType="tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersFunc">
+  <resultMap id="RoleFuncResResultMap" type="tw.idv.frank.simple_standard_law.schema.system.model.dto.RoleFuncRes">
+    <id column="role_id" jdbcType="INTEGER" property="roleId" />
+    <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+    <collection property="funcList" ofType="tw.idv.frank.simple_standard_law.schema.system.model.dto.RoleFuncDto" javaType="java.util.ArrayList" >
+      <result column="func_id" jdbcType="INTEGER" property="funcId"/>
+      <result column="func_name" jdbcType="VARCHAR" property="funcName"/>
+      <result column="level" jdbcType="CHAR" property="level" />
+      <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </collection>
+  </resultMap>
+
+  <select id="findUsersFuncByUsersId" parameterType="java.lang.Integer" resultType="java.lang.String">
     SELECT f.func_name || '_' || rf.level as authority FROM system.users_role ur
     inner join system.role_func rf on ur.role_id = rf.role_id
     inner join system.role r on rf.role_id = r.role_id
     inner join system.func f on rf.func_id = f.func_id
     where ur.user_id = #{user_id};
+  </select>
+
+  <insert id="addRoleFunc" parameterType="tw.idv.frank.simple_standard_law.schema.system.model.dto.RoleFuncAddReq">
+    <if test="funcList != null and !funcList.isEmpty()">
+      insert into system.role_func (role_id, func_id, level) values
+      <foreach collection="funcList.entrySet()" index="funcId" item="level" separator=",">
+        (#{roleId}, #{funcId}, #{level})
+      </foreach>
+    </if>
+  </insert>
+
+  <delete id="deleteByRoleId" parameterType="java.lang.Integer">
+    delete from system.role_func where role_id = #{role_id}
+  </delete>
+
+  <select id="findRoleFuncByRoleId" parameterType="java.lang.Integer" resultMap="RoleFuncResResultMap">
+    select r.role_id, r.role_name, f.func_id, f.func_name, rf.level, rf.create_time
+      from system.role_func rf
+      inner join system.role r on rf.role_id = r.role_id
+      inner join system.func f on rf.func_id = f.func_id
+    where rf.role_id = #{role_id};
   </select>
 </mapper>

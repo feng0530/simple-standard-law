@@ -9,63 +9,26 @@
   <sql id="Base_Column_List">
     role_id, role_name, create_time
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
+
+  <insert id="addRole" parameterType="tw.idv.frank.simple_standard_law.schema.system.model.dto.RoleAddReq" keyProperty="roleId" useGeneratedKeys="true">
+    insert into system.role (role_name) values
+    (#{roleName})
+  </insert>
+
+  <select id="findRoleList" resultMap="BaseResultMap">
+    select
+      <include refid="Base_Column_List" />
     from system.role
-    where role_id = #{roleId,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+
+  <update id="updateRole" parameterType="tw.idv.frank.simple_standard_law.schema.system.model.dto.RoleUpdateReq">
+    update system.role
+      set role_name = #{roleName}
+    where role_id = #{roleId}
+  </update>
+
+  <delete id="deleteRole" parameterType="java.lang.Integer">
     delete from system.role
-    where role_id = #{roleId,jdbcType=INTEGER}
+      where role_id = #{roleId}
   </delete>
-  <insert id="insert" parameterType="tw.idv.frank.simple_standard_law.schema.system.model.entity.Role">
-    insert into system.role (role_id, role_name, create_time
-      )
-    values (#{roleId,jdbcType=INTEGER}, #{roleName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="tw.idv.frank.simple_standard_law.schema.system.model.entity.Role">
-    insert into system.role
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="roleId != null">
-        role_id,
-      </if>
-      <if test="roleName != null">
-        role_name,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="roleId != null">
-        #{roleId,jdbcType=INTEGER},
-      </if>
-      <if test="roleName != null">
-        #{roleName,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="tw.idv.frank.simple_standard_law.schema.system.model.entity.Role">
-    update system.role
-    <set>
-      <if test="roleName != null">
-        role_name = #{roleName,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where role_id = #{roleId,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="tw.idv.frank.simple_standard_law.schema.system.model.entity.Role">
-    update system.role
-    set role_name = #{roleName,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
-    where role_id = #{roleId,jdbcType=INTEGER}
-  </update>
 </mapper>
