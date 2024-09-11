@@ -1,10 +1,13 @@
 package tw.idv.frank.simple_standard_law.common.filter;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,10 +19,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import tw.idv.frank.simple_standard_law.common.service.JwtService;
+import tw.idv.frank.simple_standard_law.common.service.RedisService;
+import tw.idv.frank.simple_standard_law.common.tools.JsonTool;
 import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersFunc;
 import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersRes;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,6 +36,12 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
+    @Autowired
+    private RedisService redisService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -49,21 +62,20 @@ public class JwtFilter extends OncePerRequestFilter {
 
             // 解析 token
             Claims tokenPayload = jwtService.parseToken(accessToken);
-
             if(!tokenPayload.isEmpty()){
 
-                List<LinkedHashMap<String, String>> authoritiesMaps = (List<LinkedHashMap<String, String>>) tokenPayload.get("authorities");
+                UsersRes usersRes = modelMapper.map(tokenPayload.get("user"), UsersRes.class);
 
-                List<GrantedAuthority> authorities = authoritiesMaps.stream()
-                        .flatMap(map -> map.values().stream())
+                // 從 Redis取出 authorities
+                List<UsersFunc> usersFuncList = JsonTool.convertJsonToObject(redisService.getAuthorities(String.valueOf(usersRes.getUserId())), new TypeReference<List<UsersFunc>>() {});
+                List<GrantedAuthority> authorities = usersFuncList.stream()
+                        .flatMap(usersFunc -> usersFunc.getAuthorities().stream())
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-                Integer userId = (Integer) tokenPayload.get("userId");
-
                 // 將使用者身份與權限傳遞給 Spring Security
                 Authentication authentication = new UsernamePasswordAuthenticationToken(
-                        userId,
+                        usersRes.getUserId(),
                         null,
                         authorities
                 );

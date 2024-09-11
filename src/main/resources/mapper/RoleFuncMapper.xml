@@ -20,12 +20,19 @@
     </collection>
   </resultMap>
 
-  <select id="findUsersFuncByUsersId" parameterType="java.lang.Integer" resultType="java.lang.String">
-    SELECT f.func_name || '_' || rf.level as authority FROM system.users_role ur
+  <resultMap id="UserFuncResultMap" type="tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersFunc">
+    <result column="subject_name" jdbcType="VARCHAR" property="subjectName"/>
+    <collection property="authorities" ofType="java.lang.String" javaType="java.util.ArrayList" >
+      <result column="authority" jdbcType="VARCHAR"/>
+    </collection>
+  </resultMap>
+
+  <select id="findUsersFuncByUsersId" parameterType="java.lang.Integer" resultMap="UserFuncResultMap">
+    SELECT f.subject_name, f.func_name || '_' || rf.level as authority FROM system.users_role ur
     inner join system.role_func rf on ur.role_id = rf.role_id
     inner join system.role r on rf.role_id = r.role_id
     inner join system.func f on rf.func_id = f.func_id
-    where ur.user_id = #{user_id};
+    where ur.user_id = #{user_id} order by f.subject_name, authority;
   </select>
 
   <insert id="addRoleFunc" parameterType="tw.idv.frank.simple_standard_law.schema.system.model.dto.RoleFuncAddReq">

@@ -19,5 +19,5 @@ public interface UsersService {
 
     List<UsersRes> findUsersList();
 
-    UsersRes findByUserId(Integer userId);
+    UsersRes findByUserId(Integer userId) throws BaseException;
 }

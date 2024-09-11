@@ -30,6 +30,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (Objects.isNull(users)) {
             throw new UserNotFoundException(String.format("找不到此帳號: %s", account));
         }
+
         return new UsersDetails(users, roleFuncMapper.findUsersFuncByUsersId(users.getUserId()));
     }
 }

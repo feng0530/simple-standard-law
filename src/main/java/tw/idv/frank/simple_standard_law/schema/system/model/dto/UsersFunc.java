@@ -1,15 +1,13 @@
 package tw.idv.frank.simple_standard_law.schema.system.model.dto;
 
 import lombok.Data;
-import org.springframework.security.core.GrantedAuthority;
+
+import java.util.List;
 
 @Data
-public class UsersFunc implements GrantedAuthority {
+public class UsersFunc {
 
-    private String authority;
+    private String subjectName;
 
-    @Override
-    public String getAuthority() {
-        return authority;
-    }
+    private List<String> authorities;
 }

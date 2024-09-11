@@ -1,6 +1,5 @@
 package tw.idv.frank.simple_standard_law.schema.system.service.impl;
 
-import org.hibernate.usertype.LoggableUserType;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

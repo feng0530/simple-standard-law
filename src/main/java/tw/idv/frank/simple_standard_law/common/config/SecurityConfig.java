@@ -31,6 +31,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(registry -> registry
                         .requestMatchers("/users/register", "/users/login").permitAll()
+                        .requestMatchers("/*.html", "/css/*.css", "/js/*.js","/resource/**").permitAll()
                 .anyRequest().authenticated())
 
                 // 加入自訂義的 Filter

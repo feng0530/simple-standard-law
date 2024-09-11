@@ -13,9 +13,8 @@ import tw.idv.frank.simple_standard_law.common.constant.CommonCode;
 import tw.idv.frank.simple_standard_law.common.dto.LoginReq;
 import tw.idv.frank.simple_standard_law.common.dto.LoginRes;
 import tw.idv.frank.simple_standard_law.common.exception.BaseException;
-import tw.idv.frank.simple_standard_law.common.filter.JwtFilter;
-import tw.idv.frank.simple_standard_law.common.service.JwtBlackListService;
 import tw.idv.frank.simple_standard_law.common.service.JwtService;
+import tw.idv.frank.simple_standard_law.common.service.RedisService;
 import tw.idv.frank.simple_standard_law.schema.system.model.dao.UsersMapper;
 import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersDetails;
 import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersRegisterReq;
@@ -45,11 +44,10 @@ public class UsersServiceImpl implements UsersService {
     private JwtService jwtService;
 
     @Autowired
-    private JwtBlackListService jwtBlackListService;
+    private RedisService redisService;
 
     @Override
     public UsersRes usersRegister(UsersRegisterReq req) throws BaseException {
-//        validAccountExist(req.getAccount());
         return register(req);
     }
 
@@ -62,7 +60,7 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public void usersLogout(HttpServletRequest req) {
         String jwt = req.getHeader("Authorization").substring("Bearer ".length());
-        jwtBlackListService.addJwtToBlackList(jwt);
+        redisService.addJwtToBlackList(jwt);
     }
 
     @Override
@@ -74,9 +72,12 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public UsersRes findByUserId(Integer userId) {
-        // 待修正 userId不存在
-        return modelMapper.map(usersMapper.findByUserId(userId), UsersRes.class);
+    public UsersRes findByUserId(Integer userId) throws BaseException {
+        Users users = usersMapper.findByUserId(userId);
+        if (users == null) {
+            throw new BaseException(CommonCode.ERROR_904);
+        }
+        return modelMapper.map(users, UsersRes.class);
     }
 
     private UsersDetails authentication(LoginReq req) {

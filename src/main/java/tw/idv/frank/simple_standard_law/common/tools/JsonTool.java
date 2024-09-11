@@ -1,6 +1,7 @@
 package tw.idv.frank.simple_standard_law.common.tools;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -36,4 +37,10 @@ public class JsonTool {
         // 使用注入的ObjectMapper將JSON字符串轉換為Java對象  valueType指定用哪個類別裝
         return mapper.readValue(jsonString, valueType);
     }
+
+    public static <T> T convertJsonToObject(String jsonString, TypeReference<T> typeReference) throws JsonProcessingException {
+        // 使用 ObjectMapper 和 TypeReference 將 JSON 字符串轉換為 Java 對象
+        return mapper.readValue(jsonString, typeReference);
+    }
+
 }

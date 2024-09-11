@@ -1,5 +1,7 @@
 package tw.idv.frank.simple_standard_law.schema.system.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,9 @@ import tw.idv.frank.simple_standard_law.common.dto.CommonResult;
 import tw.idv.frank.simple_standard_law.common.dto.LoginReq;
 import tw.idv.frank.simple_standard_law.common.dto.LoginRes;
 import tw.idv.frank.simple_standard_law.common.exception.BaseException;
+import tw.idv.frank.simple_standard_law.common.service.RedisService;
+import tw.idv.frank.simple_standard_law.common.tools.JsonTool;
+import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersFunc;
 import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersRegisterReq;
 import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersRes;
 import tw.idv.frank.simple_standard_law.schema.system.service.UsersService;
@@ -22,6 +27,9 @@ public class UsersController {
 
     @Autowired
     private UsersService usersService;
+
+    @Autowired
+    private RedisService redisService;
 
     @PostMapping("/register")
     public CommonResult<UsersRes> register(@Valid @RequestBody UsersRegisterReq req) throws BaseException {
@@ -47,7 +55,15 @@ public class UsersController {
 
     @PreAuthorize("hasAuthority('root_*') or #userId == authentication.principal")
     @GetMapping("/{userId}")
-    public CommonResult<UsersRes> findByUserId(@PathVariable Integer userId) {
+    public CommonResult<UsersRes> findByUserId(@PathVariable Integer userId) throws BaseException {
         return new CommonResult<>(usersService.findByUserId(userId));
     }
+
+    @PreAuthorize("#userId == authentication.principal")
+    @GetMapping("/{userId}/funcs")
+    public CommonResult<List<UsersFunc>> findUserFuncByUserId(@PathVariable Integer userId) throws JsonProcessingException {
+        List<UsersFunc> usersFuncList = JsonTool.convertJsonToObject(redisService.getAuthorities(String.valueOf(userId)), new TypeReference<List<UsersFunc>>() {});
+        return new CommonResult<>(usersFuncList);
+    }
+
 }

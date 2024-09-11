@@ -2,6 +2,7 @@ package tw.idv.frank.simple_standard_law.schema.system.model.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,10 @@ public class Func {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "func_id")
     private Integer funcId;
+
+    @NotNull
+    @Column(name = "subject_name")
+    private Integer subjectName;
 
     @NotBlank
     @Column(name = "func_name")

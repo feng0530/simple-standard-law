@@ -7,13 +7,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
+import tw.idv.frank.simple_standard_law.common.tools.JsonTool;
 import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersDetails;
 import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersRes;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -32,7 +36,7 @@ public class JwtService {
     private ModelMapper modelMapper;
 
     @Autowired
-    private JwtBlackListService jwtBlackListService;
+    private RedisService redisService;
 
     @PostConstruct
     private void init() {
@@ -42,14 +46,14 @@ public class JwtService {
                         .build();
     }
 
-    public Claims parseToken(String token) {
+    public Claims parseToken(String jwt) {
 
         try {
-            if (jwtBlackListService.isJwtInBlackList(token)) {
+            if (redisService.isJwtInBlackList(jwt)) {
                 log.error("JWT ID無效，表示已經登出或者已經被鎖定");
                 return Jwts.claims();
             }
-            return jwtParser.parseClaimsJws(token).getBody();
+            return jwtParser.parseClaimsJws(jwt).getBody();
         }catch (SignatureException e) {
             log.error("JWT 的簽名無效，表示JWT 被竄改或者使用了錯誤的密鑰驗證");
         }
@@ -72,14 +76,15 @@ public class JwtService {
         String jti = String.valueOf(UUID.randomUUID());
         UsersRes usersRes = modelMapper.map(usersDetails.getUsers(), UsersRes.class);
 
+        redisService.addAuthorities(String.valueOf(usersRes.getUserId()), JsonTool.toJson(usersDetails.getUsersFuncList()));
+
         return Jwts.builder()
                 .setId(jti)
                 .setSubject("Access Token")
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMillis))
-                .claim("userId", usersRes.getUserId())
                 .claim("user", usersRes)
-                .claim("authorities", usersDetails.getAuthorities())
+//                .claim("authorities", usersDetails.getUsersFuncList())
                 .signWith(secretKey)
                 .compact();
     }
