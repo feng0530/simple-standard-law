@@ -1,149 +1,155 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>簡易法系統</title>
-    <link rel="icon" href="resource/java.png" type="image/png">
+    <link rel="icon" href="png/java.png" type="image/png">
+
+
     <!-- 引入 Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/main.css">
     <!-- 引入 Font Awesome CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    <!-- 引入 DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.7/css/dataTables.dataTables.min.css">
     <!-- 引入 jQuery 和 Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- 引入 dataTable -->
+    <script src="https://cdn.datatables.net/2.1.7/js/dataTables.min.js"></script>
     <!-- 從 CDN 引入 jwt-decode -->
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+    <!-- 從 CDN 引入 PDF.js -->
+    <!-- 將 Base64渲染到頁面上 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <!-- 從 CDN 引入 PDF檢視器 -->
+    <!-- 將 PDF直接套在 <embed> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfobject/2.2.4/pdfobject.min.js"></script>
     <script src="js/main.js"></script>
     <script src="js/core.js"></script>
     <script src="js/constants.js"></script>
     <script src="js/user_funcs.js"></script>
+    <script src="js/dataTable.js"></script>
 </head>
+
 <body>
-<div class="d-flex justify-content-end align-items-center" style="padding: 8px 16px 5px 16px">
-    <div class="top-menu">
-        <div class="top-menu-item">
-            <i class="fa-solid fa-user"></i>
-            <div>
-                <a id="user_name" href="#">王*明</a>
-            </div>
-        </div>
-        <div class="top-menu-item">
-            <i class="fa-solid fa-bell"></i>
-            <div>通知</div>
-        </div>
-        <div class="top-menu-item">
-            <i class="fa-solid fa-file-arrow-down"></i>
-            <div>批次下載</div>
-        </div>
-        <div class="top-menu-item">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <div>歷史查詢</div>
-        </div>
-        <div class="top-menu-item">
-            <i class="fa-solid fa-chart-line"></i>
-            <div>市場風險</div>
-        </div>
-        <div class="top-menu-item" id="logout">
-            <i class="fa-solid fa-arrow-right-from-bracket"></i>
-            <div>登出</div>
-        </div>
-    </div>
-</div>
-
-<div class="container-fluid">
-    <div class="row">
-        <!-- 固定側邊欄 -->
-        <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar">
-            <div class="sidebar-sticky">
+    <div class="d-flex justify-content-end align-items-center" style="padding: 8px 16px 5px 16px">
+        <div class="top-menu">
+            <div class="top-menu-item">
+                <i class="fa-solid fa-user"></i>
                 <div>
-                    <h1 class="form-header">
-                        表單
-                    </h1>
-                </div>
-                <!-- 使用 Accordion 實現摺疊選單 -->
-                <div class="accordion" id="sidebarAccordion">
-<!--
-                    <div class="card bg-dark">
-                        <div class="card-header" id="headingBusiness1">
-                            <h2 class="mb-0">
-                                <button class="btn btn-link text-white collapsed" type="button" data-toggle="collapse" data-target="#collapseBusiness1" aria-expanded="false" aria-controls="collapseBusiness1">
-                                    業務別 1
-                                </button>
-                            </h2>
-                        </div>
-                        <div id="collapseBusiness1" class="collapse" aria-labelledby="headingBusiness1" data-parent="#sidebarAccordion">
-                            <div class="card-body bg-secondary">
-                                <ul class="nav flex-column" id="navbar-business1">
-                                    <li class="nav-item"><a class="nav-link" href="#" data-target="business1">業務功能 1</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="#" data-target="business2">業務功能 2</a></li>
-                                    <li class="nav-item"><a class="nav-link" href="#" data-target="business3">業務功能 3</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
--->
-
+                    <a id="user_name" href="#">王*明</a>
                 </div>
             </div>
-        </nav>
-
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4" id="main-content">
-            <!-- 標籤 -->
-            <ul class="nav nav-tabs" id="mainTabs" style="display: none;">
-                <li class="nav-item" id="report">
-                    <a class="nav-link active" href="#">報表</a>
-                </li>
-                <li class="nav-item" id="upload">
-                    <a class="nav-link" href="#" id="tab-import">匯入資料</a>
-                </li>
-                <li class="nav-item" id="adjust">
-                    <a class="nav-link" href="#">利率調整</a>
-                </li>
-                <li class="nav-item" id="select">
-                    <a class="nav-link" href="#">查詢</a>
-                </li>
-            </ul>
-
-            <div id="tab-content" style="display: none;">
-                <!-- 動態更新的主要內容會在這裡顯示 -->
-                <!-- ... -->
+            <div class="top-menu-item">
+                <i class="fa-solid fa-bell"></i>
+                <div>通知</div>
             </div>
-
-            <!-- 歡迎使用首頁樣式 -->
-            <div id="home-welcome" class="mt-4">
-                <div class="jumbotron jumbotron-fluid bg-light">
-                    <div class="container">
-                        <h1 class="display-4">歡迎使用我們的系統</h1>
-                        <p class="lead">我們提供一系列強大的功能來協助您完成工作。請選擇左側的選單以探索更多功能。</p>
-                        <hr class="my-4">
-                        <p>如果您是第一次使用此系統，請參閱我們的<a href="#">使用指南</a>以獲取更多資訊。</p>
-                    </div>
-                </div>
+            <div class="top-menu-item">
+                <i class="fa-solid fa-file-arrow-down"></i>
+                <div>批次下載</div>
             </div>
-
-            <!-- 匯入資料頁籤內容 -->
-            <div id="import-section" style="display: none;">
-                <h2>匯入資料</h2>
-                <p>說明項目: 請仔細閱讀以下注意事項以確保資料匯入成功。</p>
-                <ul>
-                    <li>資料格式必須符合模板的要求。</li>
-                    <li>確保所有必填欄位已填寫。</li>
-                    <li>文件大小不得超過 5MB。</li>
-                </ul>
-                <hr>
-                <a href="template.xlsx" class="btn btn-secondary" download>下載模板</a>
-                <hr>
-                <div class="form-group">
-                    <label for="fileUpload">檔案上傳：</label>
-                    <input type="file" class="form-control-file" id="fileUpload">
-                </div>
-                <button class="btn btn-primary" id="importButton">Import</button>
+            <div class="top-menu-item">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <div>歷史查詢</div>
             </div>
-        </main>
-
+            <div class="top-menu-item">
+                <i class="fa-solid fa-chart-line"></i>
+                <div>市場風險</div>
+            </div>
+            <div class="top-menu-item" id="logout">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                <div>登出</div>
+            </div>
+        </div>
     </div>
-</div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 固定側邊欄 -->
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar">
+                <div class="sidebar-sticky">
+                    <div>
+                        <h1 class="form-header" id="test">
+                            表單
+                        </h1>
+                    </div>
+                    <!-- 使用 Accordion 實現摺疊選單 -->
+                    <div class="accordion" id="sidebarAccordion">
+                        <!-- 側邊欄內容 -->
+                    </div>
+                </div>
+            </nav>
+
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4" id="main-content">
+                <!-- 標籤 -->
+                <ul class="nav nav-tabs" id="mainTabs" style="display: none;">
+                    <li class="nav-item" id="report">
+                        <a class="nav-link active" href="#">報表</a>
+                    </li>
+                    <li class="nav-item" id="upload">
+                        <a class="nav-link" href="#" id="tab-import">匯入資料</a>
+                    </li>
+                    <li class="nav-item" id="adjust">
+                        <a class="nav-link" href="#">利率調整</a>
+                    </li>
+                    <li class="nav-item" id="select">
+                        <a class="nav-link" href="#">查詢</a>
+                    </li>
+                </ul>
+
+                <div id="tab-content" style="display: none;">
+                    <!-- 動態更新的主要內容會在這裡顯示 -->
+                    <!-- ... -->
+                </div>
+
+                <!-- 歡迎使用首頁樣式 -->
+                <div id="home-welcome" class="mt-4">
+                    <div class="jumbotron jumbotron-fluid bg-light">
+                        <div class="container">
+                            <h1 class="display-4">歡迎使用我們的系統</h1>
+                            <p class="lead">我們提供一系列強大的功能來協助您完成工作。請選擇左側的選單以探索更多功能。</p>
+                            <hr class="my-4">
+                            <p>如果您是第一次使用此系統，請參閱我們的<a href="#">使用指南</a>以獲取更多資訊。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 匯入資料頁籤內容 -->
+                <div id="import-section" style="display: none;">
+                    <h2>匯入資料</h2>
+                    <p>說明項目: 請仔細閱讀以下注意事項以確保資料匯入成功。</p>
+                    <ul>
+                        <li>資料格式必須符合模板的要求。</li>
+                        <li>確保所有必填欄位已填寫。</li>
+                        <li>文件大小不得超過 5MB。</li>
+                    </ul>
+                    <hr>
+                    <a href="template.xlsx" class="btn btn-secondary" download>下載模板</a>
+                    <hr>
+                    <div class="form-group">
+                        <label for="fileUpload">檔案上傳：</label>
+                        <input type="file" class="form-control-file" id="fileUpload">
+                    </div>
+                    <button class="btn btn-primary" id="importButton">Import</button>
+                </div>
+
+
+                <div class="modal fade" id="manageModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <!-- 動態生成 modal內容 -->
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+        </div>
+    </div>
 </body>
+
 </html>

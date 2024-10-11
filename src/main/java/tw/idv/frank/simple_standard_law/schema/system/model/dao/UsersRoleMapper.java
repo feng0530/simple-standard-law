@@ -14,5 +14,5 @@ public interface UsersRoleMapper {
 
     void deleteByUserId(Integer usersId);
 
-    List<UsersRoleRes> findUsersRoleByUserId(Integer userId);
+    UsersRoleRes findUsersRoleByUserId(Integer userId);
 }

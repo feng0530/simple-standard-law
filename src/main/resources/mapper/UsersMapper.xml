@@ -45,6 +45,11 @@
     select
       <include refid="UsersRes" />
     from system.users
-      where user_id = #{user_id}
+      where user_id = #{userId}
   </select>
+
+  <delete id="deleteByUserId" parameterType="java.lang.Integer">
+    delete from system.users
+    where user_id = #{userId}
+  </delete>
 </mapper>

@@ -24,7 +24,7 @@ public class RoleFuncServiceImpl implements RoleFuncService {
     }
 
     @Override
-    public List<RoleFuncRes> findRoleFuncByRoleId(Integer roleId) {
+    public RoleFuncRes findRoleFuncByRoleId(Integer roleId) {
         return roleFuncMapper.findRoleFuncByRoleId(roleId);
     }
 }

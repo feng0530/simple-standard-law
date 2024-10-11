@@ -23,7 +23,7 @@ public class Func {
 
     @NotNull
     @Column(name = "subject_name")
-    private Integer subjectName;
+    private String subjectName;
 
     @NotBlank
     @Column(name = "func_name")

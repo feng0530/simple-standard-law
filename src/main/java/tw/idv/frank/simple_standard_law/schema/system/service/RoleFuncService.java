@@ -9,5 +9,5 @@ public interface RoleFuncService {
     
     void updateRoleFunc(RoleFuncAddReq req);
 
-    List<RoleFuncRes> findRoleFuncByRoleId(Integer roleId);
+    RoleFuncRes findRoleFuncByRoleId(Integer roleId);
 }

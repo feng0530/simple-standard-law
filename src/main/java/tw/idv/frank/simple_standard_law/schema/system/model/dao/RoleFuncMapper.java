@@ -17,5 +17,5 @@ public interface RoleFuncMapper {
 
     void deleteByRoleId(Integer roleId);
 
-    List<RoleFuncRes> findRoleFuncByRoleId(Integer roleId);
+    RoleFuncRes findRoleFuncByRoleId(Integer roleId);
 }

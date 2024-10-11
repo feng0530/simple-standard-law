@@ -3,69 +3,17 @@
 <mapper namespace="tw.idv.frank.simple_standard_law.schema.system.model.dao.FuncMapper">
   <resultMap id="BaseResultMap" type="tw.idv.frank.simple_standard_law.schema.system.model.entity.Func">
     <id column="func_id" jdbcType="INTEGER" property="funcId" />
+    <result column="subject_name" jdbcType="VARCHAR" property="subjectName" />
     <result column="func_name" jdbcType="VARCHAR" property="funcName" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    func_id, func_name, create_time
+    func_id, subject_name, func_name, create_time
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="findFuncList" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from system.func
-    where func_id = #{funcId,jdbcType=INTEGER}
+    order by func_id
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from system.func
-    where func_id = #{funcId,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="tw.idv.frank.simple_standard_law.schema.system.model.entity.Func">
-    insert into system.func (func_id, func_name, create_time
-      )
-    values (#{funcId,jdbcType=INTEGER}, #{funcName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="tw.idv.frank.simple_standard_law.schema.system.model.entity.Func">
-    insert into system.func
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="funcId != null">
-        func_id,
-      </if>
-      <if test="funcName != null">
-        func_name,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="funcId != null">
-        #{funcId,jdbcType=INTEGER},
-      </if>
-      <if test="funcName != null">
-        #{funcName,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="tw.idv.frank.simple_standard_law.schema.system.model.entity.Func">
-    update system.func
-    <set>
-      <if test="funcName != null">
-        func_name = #{funcName,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where func_id = #{funcId,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="tw.idv.frank.simple_standard_law.schema.system.model.entity.Func">
-    update system.func
-    set func_name = #{funcName,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
-    where func_id = #{funcId,jdbcType=INTEGER}
-  </update>
 </mapper>
