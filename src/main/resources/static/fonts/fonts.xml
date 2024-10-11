@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fontFamilies>
+    <fontFamily name="微軟正黑體">  // 報表中用到幾組字體就必須設定幾組
+        <normal>static/fonts/微軟正黑體.ttf</normal> // 似乎是以 "resources/" 為起始路徑
+        <pdfEncoding>Identity-H</pdfEncoding>
+        <pdfEmbedded>true</pdfEmbedded>
+        <exportFonts/>
+    </fontFamily>
+</fontFamilies>

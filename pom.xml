@@ -31,6 +31,12 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional> <!-- 避免它進入生產環境 -->
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -52,6 +58,13 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<!-- 報表工具 -->
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>5.6.0</version>
 		</dependency>
 
 		<!-- 配置處理器，主要用於自動產生配置文件的元數據(Meta-data)，@Configuration、@ConfigurationProperties -->
@@ -147,6 +160,17 @@
 			<version>3.1.1</version>
 		</dependency>
 	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>jasperreports</id>
+			<url>https://sourceforge.net/projects/jasperreports/files/maven2/</url>
+		</repository>
+		<repository>
+			<id>jaspersoft</id>
+			<url>https://jaspersoft.jfrog.io/artifactory/third-party-ce-artifacts/</url>
+		</repository>
+	</repositories>
 
 	<build>
 		<pluginManagement>
