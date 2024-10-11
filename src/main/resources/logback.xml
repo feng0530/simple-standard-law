@@ -1,5 +1,5 @@
 <configuration>
-    <!--    設置變數，將檔案位置設為./logs-->
+    <!-- 設置變數，將檔案位置設為./logs-->
     <property name="LOG_PATH" value="./logs" />
     <!-- 定義通用的 Pattern -->
     <property name="COMMON_PATTERN" value="%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n" />
@@ -9,7 +9,7 @@
     <property name="MAX_HISTORY" value="30" />
 
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-        <!--用ThresholdFilter過濾ERROR以上級別才顯示在terminal上~-->
+        <!--用ThresholdFilter過濾 INFO以上級別才顯示在terminal上~-->
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>INFO</level>
         </filter>

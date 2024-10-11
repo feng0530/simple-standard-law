@@ -19,4 +19,14 @@ public class UsersRegisterReq {
 
     @NotBlank
     private String password;
+
+    @Override
+    public String toString() {
+        return "UsersRegisterReq{" +
+                "userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", account='" + account + '\'' +
+                ", password='[PROTECTED]'" +  // 過濾密碼
+                '}';
+    }
 }

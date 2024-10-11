@@ -11,4 +11,12 @@ public class LoginReq {
 
     @NotBlank
     private String password;
+
+    @Override
+    public String toString() {
+        return "LoginReq{" +
+                "account='" + account + '\'' +
+                ", password='[PROTECTED]'" +  // 過濾密碼
+                '}';
+    }
 }
