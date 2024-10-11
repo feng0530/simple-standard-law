@@ -20,9 +20,9 @@ public class RoleFuncController {
     @Autowired
     private RoleFuncService roleFuncService;
 
-    @PreAuthorize("hasAuthority('root_*')")
+    @PreAuthorize("hasAuthority('root_x')")
     @PutMapping
-    public CommonResult updateRoleFuncFunc(
+    public CommonResult updateRoleFunc(
             @PathVariable Integer roleId,
             @Valid @RequestBody RoleFuncAddReq req
     ) {
@@ -31,9 +31,9 @@ public class RoleFuncController {
         return new CommonResult(CommonCode.UPDATE);
     }
 
-    @PreAuthorize("hasAuthority('root_*')")
+    @PreAuthorize("hasAuthority('root_x')")
     @GetMapping
-    public CommonResult<List<RoleFuncRes>> findRoleFuncByRoleId(@PathVariable Integer roleId) {
+    public CommonResult<RoleFuncRes> findRoleFuncByRoleId(@PathVariable Integer roleId) {
         return new CommonResult<>(roleFuncService.findRoleFuncByRoleId(roleId));
     }
 }

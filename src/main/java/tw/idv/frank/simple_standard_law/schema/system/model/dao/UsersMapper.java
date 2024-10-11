@@ -19,4 +19,6 @@ public interface UsersMapper {
     List<Users> findUsersList();
 
     Users findByUserId(Integer userId);
+
+    void deleteByUserId(Integer userId);
 }

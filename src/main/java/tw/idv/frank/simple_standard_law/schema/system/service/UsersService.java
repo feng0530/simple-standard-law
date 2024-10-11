@@ -15,9 +15,11 @@ public interface UsersService {
 
     LoginRes usersLogin(LoginReq req);
 
-    void usersLogout(HttpServletRequest req);
+    void usersLogout(HttpServletRequest http);
 
     List<UsersRes> findUsersList();
 
     UsersRes findByUserId(Integer userId) throws BaseException;
+
+    void deleteByUserId(Integer userId);
 }

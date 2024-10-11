@@ -2,7 +2,6 @@ package tw.idv.frank.simple_standard_law.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -30,8 +29,9 @@ public class SecurityConfig {
     ) throws Exception {
 
         http.authorizeHttpRequests(registry -> registry
-                        .requestMatchers("/users/register", "/users/login").permitAll()
-                        .requestMatchers("/*.html", "/css/*.css", "/js/*.js","/resource/**").permitAll()
+                        // 符合就不會在往下，故匹配範圍大的要再越後面
+                        .requestMatchers("/users/register", "/users/login", "/users/logout").permitAll()
+                        .requestMatchers("/*.html", "/css/*.css", "/js/*.js", "/png/**", "/report/**").permitAll()
                 .anyRequest().authenticated())
 
                 // 加入自訂義的 Filter
@@ -41,7 +41,14 @@ public class SecurityConfig {
                         .authenticationEntryPoint(new AuthenticationEntryPointHandlerImpl())
                         .accessDeniedHandler(new AccessDeniedHandlerImpl()))
                 // 禁用 Security內建的 csrf保護機制
-                .csrf(csrf -> csrf.disable());
+                .csrf(csrf -> csrf.disable())
+                // 這個配置主要用於防範 Clickjacking 攻擊，即保護應用不被其他網站通過 <iframe> 嵌入
+                .headers(
+                        headers -> headers.frameOptions(
+                                // 允許同源的頁面可以嵌入
+                                frameOptionsConfig -> frameOptionsConfig.sameOrigin()
+                        )
+                );
                 // Security 預設登入畫面
 //                .formLogin(Customizer.withDefaults());
         return http.build();

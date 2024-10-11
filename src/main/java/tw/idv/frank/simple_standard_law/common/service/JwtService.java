@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import tw.idv.frank.simple_standard_law.common.tools.JsonTool;
 import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersDetails;
@@ -15,9 +14,7 @@ import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersRes;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -49,8 +46,11 @@ public class JwtService {
     public Claims parseToken(String jwt) {
 
         try {
-            if (redisService.isJwtInBlackList(jwt)) {
-                log.error("JWT ID無效，表示已經登出或者已經被鎖定");
+            Claims claims = jwtParser.parseClaimsJws(jwt).getBody();
+            String userId = claims.getId();
+
+            if (redisService.isJwtInOnlineList(userId)) {
+                log.error("JWT ID無效，表示已經登出或者無法使用");
                 return Jwts.claims();
             }
             return jwtParser.parseClaimsJws(jwt).getBody();
@@ -73,18 +73,19 @@ public class JwtService {
     }
 
     public String createToken(UsersDetails usersDetails) {
-        String jti = String.valueOf(UUID.randomUUID());
+//        String jti = String.valueOf(UUID.randomUUID());
         UsersRes usersRes = modelMapper.map(usersDetails.getUsers(), UsersRes.class);
+        String userId = String.valueOf(usersRes.getUserId());
 
-        redisService.addAuthorities(String.valueOf(usersRes.getUserId()), JsonTool.toJson(usersDetails.getUsersFuncList()));
+        redisService.addAuthorities(userId, JsonTool.toJson(usersDetails.getUsersFuncList()));
 
         return Jwts.builder()
-                .setId(jti)
+//                .setId(jti)
+                .setId(userId)
                 .setSubject("Access Token")
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMillis))
                 .claim("user", usersRes)
-//                .claim("authorities", usersDetails.getUsersFuncList())
                 .signWith(secretKey)
                 .compact();
     }

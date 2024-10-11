@@ -1,5 +1,6 @@
 package tw.idv.frank.simple_standard_law.schema.system.service.impl;
 
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import tw.idv.frank.simple_standard_law.common.constant.CommonCode;
@@ -22,6 +24,7 @@ import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersRes;
 import tw.idv.frank.simple_standard_law.schema.system.model.entity.Users;
 import tw.idv.frank.simple_standard_law.schema.system.service.UsersService;
 
+import java.rmi.server.RemoteRef;
 import java.util.List;
 
 @Slf4j
@@ -54,13 +57,18 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public LoginRes usersLogin(LoginReq req) {
         UsersDetails usersDetails = authentication(req);
-        return new LoginRes(jwtService.createToken(usersDetails));
+//        return new LoginRes(jwtService.createToken(usersDetails));
+        String jwt = jwtService.createToken(usersDetails);
+        String userId = String.valueOf(usersDetails.getUsers().getUserId());
+        redisService.addJwtToOnlineList(userId);
+        return  new LoginRes(jwt);
     }
 
     @Override
-    public void usersLogout(HttpServletRequest req) {
-        String jwt = req.getHeader("Authorization").substring("Bearer ".length());
-        redisService.addJwtToBlackList(jwt);
+    public void usersLogout(HttpServletRequest http) {
+        String jwt = http.getHeader("Authorization").substring("Bearer ".length());
+        Claims claims = jwtService.parseToken(jwt);
+        redisService.deleteJwtInOnlineList(claims.getId());
     }
 
     @Override
@@ -78,6 +86,11 @@ public class UsersServiceImpl implements UsersService {
             throw new BaseException(CommonCode.ERROR_904);
         }
         return modelMapper.map(users, UsersRes.class);
+    }
+
+    @Override
+    public void deleteByUserId(Integer userId) {
+        usersMapper.deleteByUserId(userId);
     }
 
     private UsersDetails authentication(LoginReq req) {

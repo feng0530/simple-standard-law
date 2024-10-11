@@ -21,6 +21,8 @@ public enum CommonCode {
 
     DB_ERROR(500, "資料庫發生未知錯誤!"),
 
+    REPORT_ERROR(500, "報表生成失敗!"),
+
     INSUFFICIENT_PERMISSIONS(403, "權限不足!"),
 
     TOKEN_ERROR(403, "Token 解析失敗!"),

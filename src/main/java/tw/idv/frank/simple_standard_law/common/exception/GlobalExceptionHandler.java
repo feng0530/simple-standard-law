@@ -3,15 +3,18 @@ package tw.idv.frank.simple_standard_law.common.exception;
 import jakarta.validation.UnexpectedTypeException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import tw.idv.frank.simple_standard_law.common.constant.CommonCode;
 import tw.idv.frank.simple_standard_law.common.dto.CommonResult;
 
@@ -79,7 +82,7 @@ public class GlobalExceptionHandler {
         Matcher matcher = pattern.matcher(msg);
 
         if (matcher.find()) {
-            return "[%s] already exists".formatted(matcher.group(1));
+            return "帳號 : [%s] 已經存在".formatted(matcher.group(1));
         }else {
             return null;
         }

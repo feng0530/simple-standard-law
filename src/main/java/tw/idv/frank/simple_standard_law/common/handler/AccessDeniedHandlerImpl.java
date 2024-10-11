@@ -24,6 +24,8 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
             HttpServletResponse response,
             AccessDeniedException accessDeniedException
     ) throws IOException, ServletException {
+        String msg = accessDeniedException.getMessage() + ": " + request.getRequestURI();
+        log.warn(msg);
         log.warn(CommonCode.INSUFFICIENT_PERMISSIONS.getMes());
         ResponseTool.getRes(response, CommonCode.INSUFFICIENT_PERMISSIONS);
     }

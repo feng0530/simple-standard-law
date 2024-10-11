@@ -1,6 +1,5 @@
 package tw.idv.frank.simple_standard_law.common.handler;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +21,8 @@ public class AuthenticationEntryPointHandlerImpl implements AuthenticationEntryP
             HttpServletResponse response,
             AuthenticationException authException
     ) throws IOException {
-        log.warn(authException.getMessage());
+        String msg = authException.getMessage() + ": " + request.getRequestURI();
+        log.warn(msg);
         log.warn(CommonCode.RE_LOGIN.getMes());
         ResponseTool.getRes(response, CommonCode.RE_LOGIN);
     }

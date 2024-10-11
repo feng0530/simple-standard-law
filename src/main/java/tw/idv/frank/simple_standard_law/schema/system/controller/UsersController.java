@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import tw.idv.frank.simple_standard_law.common.constant.CommonCode;
 import tw.idv.frank.simple_standard_law.common.dto.CommonResult;
 import tw.idv.frank.simple_standard_law.common.dto.LoginReq;
 import tw.idv.frank.simple_standard_law.common.dto.LoginRes;
@@ -31,6 +32,7 @@ public class UsersController {
     @Autowired
     private RedisService redisService;
 
+    @PreAuthorize("hasAuthority('root_x')")
     @PostMapping("/register")
     public CommonResult<UsersRes> register(@Valid @RequestBody UsersRegisterReq req) throws BaseException {
         return new CommonResult<>(usersService.usersRegister(req));
@@ -42,22 +44,17 @@ public class UsersController {
     }
 
     @DeleteMapping("/logout")
-    public CommonResult logout(HttpServletRequest req) {
-        usersService.usersLogout(req);
+    public CommonResult logout(HttpServletRequest http) {
+        usersService.usersLogout(http);
         return new CommonResult();
     }
 
-    @PreAuthorize("hasAuthority('root_*')")
+    @PreAuthorize("hasAuthority('root_x')")
     @GetMapping
     public CommonResult<List<UsersRes>> findUsersList() {
         return new CommonResult<>(usersService.findUsersList());
     }
 
-    @PreAuthorize("hasAuthority('root_*') or #userId == authentication.principal")
-    @GetMapping("/{userId}")
-    public CommonResult<UsersRes> findByUserId(@PathVariable Integer userId) throws BaseException {
-        return new CommonResult<>(usersService.findByUserId(userId));
-    }
 
     @PreAuthorize("#userId == authentication.principal")
     @GetMapping("/{userId}/funcs")
@@ -66,4 +63,10 @@ public class UsersController {
         return new CommonResult<>(usersFuncList);
     }
 
+    @PreAuthorize("hasAuthority('root_x')")
+    @DeleteMapping("/{userId}")
+    public CommonResult deleteUserByUserId(@PathVariable Integer userId) {
+        usersService.deleteByUserId(userId);
+        return new CommonResult(CommonCode.DELETE);
+    }
 }
