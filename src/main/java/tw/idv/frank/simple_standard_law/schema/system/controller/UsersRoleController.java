@@ -23,7 +23,6 @@ public class UsersRoleController {
     @Autowired
     private UsersRoleService usersRoleService;
 
-    @PreAuthorize("hasAuthority('root_x')")
     @PutMapping
     public CommonResult updateUsersRole(
             @PathVariable Integer userId,
@@ -43,7 +42,6 @@ public class UsersRoleController {
         return new CommonResult(CommonCode.UPDATE);
     }
 
-    @PreAuthorize("hasAuthority('root_x')")
     @GetMapping
     public CommonResult<UsersRoleRes> findUsersRoleByUserId(@PathVariable Integer userId) {
         return new CommonResult<>(usersRoleService.findUsersRoleByUserId(userId));

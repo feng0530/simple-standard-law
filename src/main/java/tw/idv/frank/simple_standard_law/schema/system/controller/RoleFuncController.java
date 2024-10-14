@@ -20,7 +20,6 @@ public class RoleFuncController {
     @Autowired
     private RoleFuncService roleFuncService;
 
-    @PreAuthorize("hasAuthority('root_x')")
     @PutMapping
     public CommonResult updateRoleFunc(
             @PathVariable Integer roleId,
@@ -31,7 +30,6 @@ public class RoleFuncController {
         return new CommonResult(CommonCode.UPDATE);
     }
 
-    @PreAuthorize("hasAuthority('root_x')")
     @GetMapping
     public CommonResult<RoleFuncRes> findRoleFuncByRoleId(@PathVariable Integer roleId) {
         return new CommonResult<>(roleFuncService.findRoleFuncByRoleId(roleId));

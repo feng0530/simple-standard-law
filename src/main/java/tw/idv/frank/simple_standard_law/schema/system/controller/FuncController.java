@@ -20,7 +20,6 @@ public class FuncController {
     @Autowired
     private FuncService funcService;
 
-    @PreAuthorize("hasAuthority('root_x')")
     @GetMapping
     public CommonResult<List<Func>> findFuncList() {
         return new CommonResult<>(funcService.findFuncList());

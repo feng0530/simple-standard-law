@@ -13,12 +13,7 @@ import java.util.Arrays;
 @Component
 public class LogAspect {
 
-    @Pointcut("execution(* tw.idv.frank.simple_standard_law.schema..*(..))")
-    public void schema() {
-
-    }
-
-    @Around("schema()")
+    @Around("PointcutConfig.schema()")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
         String className = joinPoint.getTarget().getClass().getSimpleName();
         String methodName = joinPoint.getSignature().getName();

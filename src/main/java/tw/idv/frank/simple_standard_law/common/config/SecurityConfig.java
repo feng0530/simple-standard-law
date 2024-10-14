@@ -32,6 +32,8 @@ public class SecurityConfig {
                         // 符合就不會在往下，故匹配範圍大的要再越後面
                         .requestMatchers("/users/register", "/users/login", "/users/logout").permitAll()
                         .requestMatchers("/*.html", "/css/*.css", "/js/*.js", "/png/**", "/report/**").permitAll()
+                        .requestMatchers("/users/*/funcs").authenticated()
+                        .requestMatchers("/users/**", "/roles/**", "/funcs/**").hasAuthority("root_x")
                 .anyRequest().authenticated())
 
                 // 加入自訂義的 Filter

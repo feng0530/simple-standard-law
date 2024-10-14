@@ -21,27 +21,23 @@ public class RoleController {
     @Autowired
     private RoleService roleService;
 
-    @PreAuthorize("hasAuthority('root_x')")
     @PostMapping
     public CommonResult addRole(@Valid @RequestBody RoleAddReq req) {
         roleService.addRole(req);
         return new CommonResult(CommonCode.CREATE);
     }
 
-    @PreAuthorize("hasAuthority('root_x')")
     @GetMapping
     public CommonResult<List<RoleRes>> findRoleList() {
         return new CommonResult<> (roleService.findRoleList());
     }
 
-    @PreAuthorize("hasAuthority('root_x')")
     @PutMapping
     public CommonResult updateRole(@Valid @RequestBody RoleUpdateReq req) {
         roleService.updateRole(req);
         return new CommonResult(CommonCode.UPDATE);
     }
 
-    @PreAuthorize("hasAuthority('root_x')")
     @DeleteMapping("/{roleId}")
     public CommonResult deleteRole(@PathVariable Integer roleId) {
         roleService.deleteRole(roleId);

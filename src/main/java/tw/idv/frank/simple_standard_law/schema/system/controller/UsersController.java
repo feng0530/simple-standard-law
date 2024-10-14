@@ -32,7 +32,6 @@ public class UsersController {
     @Autowired
     private RedisService redisService;
 
-    @PreAuthorize("hasAuthority('root_x')")
     @PostMapping("/register")
     public CommonResult<UsersRes> register(@Valid @RequestBody UsersRegisterReq req) throws BaseException {
         return new CommonResult<>(usersService.usersRegister(req));
@@ -49,12 +48,10 @@ public class UsersController {
         return new CommonResult();
     }
 
-    @PreAuthorize("hasAuthority('root_x')")
     @GetMapping
     public CommonResult<List<UsersRes>> findUsersList() {
         return new CommonResult<>(usersService.findUsersList());
     }
-
 
     @PreAuthorize("#userId == authentication.principal")
     @GetMapping("/{userId}/funcs")
@@ -63,7 +60,6 @@ public class UsersController {
         return new CommonResult<>(usersFuncList);
     }
 
-    @PreAuthorize("hasAuthority('root_x')")
     @DeleteMapping("/{userId}")
     public CommonResult deleteUserByUserId(@PathVariable Integer userId) {
         usersService.deleteByUserId(userId);
