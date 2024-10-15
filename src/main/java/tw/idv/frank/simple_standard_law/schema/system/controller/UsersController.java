@@ -12,7 +12,7 @@ import tw.idv.frank.simple_standard_law.common.dto.CommonResult;
 import tw.idv.frank.simple_standard_law.common.dto.LoginReq;
 import tw.idv.frank.simple_standard_law.common.dto.LoginRes;
 import tw.idv.frank.simple_standard_law.common.exception.BaseException;
-import tw.idv.frank.simple_standard_law.common.service.RedisService;
+import tw.idv.frank.simple_standard_law.common.redis.service.RedisService;
 import tw.idv.frank.simple_standard_law.common.tools.JsonTool;
 import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersFunc;
 import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersRegisterReq;

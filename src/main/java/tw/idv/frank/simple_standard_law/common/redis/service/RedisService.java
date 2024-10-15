@@ -1,7 +1,6 @@
-package tw.idv.frank.simple_standard_law.common.service;
+package tw.idv.frank.simple_standard_law.common.redis.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;

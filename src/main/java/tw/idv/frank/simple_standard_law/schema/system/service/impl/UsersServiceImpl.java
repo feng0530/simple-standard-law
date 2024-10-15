@@ -8,15 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import tw.idv.frank.simple_standard_law.common.constant.CommonCode;
 import tw.idv.frank.simple_standard_law.common.dto.LoginReq;
 import tw.idv.frank.simple_standard_law.common.dto.LoginRes;
 import tw.idv.frank.simple_standard_law.common.exception.BaseException;
-import tw.idv.frank.simple_standard_law.common.service.JwtService;
-import tw.idv.frank.simple_standard_law.common.service.RedisService;
+import tw.idv.frank.simple_standard_law.common.security.service.JwtService;
+import tw.idv.frank.simple_standard_law.common.redis.service.RedisService;
 import tw.idv.frank.simple_standard_law.schema.system.model.dao.UsersMapper;
 import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersDetails;
 import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersRegisterReq;
@@ -24,7 +23,6 @@ import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersRes;
 import tw.idv.frank.simple_standard_law.schema.system.model.entity.Users;
 import tw.idv.frank.simple_standard_law.schema.system.service.UsersService;
 
-import java.rmi.server.RemoteRef;
 import java.util.List;
 
 @Slf4j

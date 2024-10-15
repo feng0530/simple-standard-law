@@ -1,12 +1,11 @@
-package tw.idv.frank.simple_standard_law.common.service;
+package tw.idv.frank.simple_standard_law.common.security.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import tw.idv.frank.simple_standard_law.common.exception.UserNotFoundException;
+import tw.idv.frank.simple_standard_law.common.security.exception.UserNotFoundException;
 import tw.idv.frank.simple_standard_law.schema.system.model.dao.RoleFuncMapper;
 import tw.idv.frank.simple_standard_law.schema.system.model.dao.UsersMapper;
 import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersDetails;

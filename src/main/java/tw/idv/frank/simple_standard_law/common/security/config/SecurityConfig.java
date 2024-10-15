@@ -1,4 +1,4 @@
-package tw.idv.frank.simple_standard_law.common.config;
+package tw.idv.frank.simple_standard_law.common.security.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,9 +7,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import tw.idv.frank.simple_standard_law.common.filter.JwtFilter;
-import tw.idv.frank.simple_standard_law.common.handler.AccessDeniedHandlerImpl;
-import tw.idv.frank.simple_standard_law.common.handler.AuthenticationEntryPointHandlerImpl;
+import tw.idv.frank.simple_standard_law.common.security.filter.JwtFilter;
+import tw.idv.frank.simple_standard_law.common.security.handler.AccessDeniedHandlerImpl;
+import tw.idv.frank.simple_standard_law.common.security.handler.AuthenticationEntryPointHandlerImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -30,6 +30,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(registry -> registry
                         // 符合就不會在往下，故匹配範圍大的要再越後面
+                        .requestMatchers("/mq/**").permitAll()
                         .requestMatchers("/users/register", "/users/login", "/users/logout").permitAll()
                         .requestMatchers("/*.html", "/css/*.css", "/js/*.js", "/png/**", "/report/**").permitAll()
                         .requestMatchers("/users/*/funcs").authenticated()

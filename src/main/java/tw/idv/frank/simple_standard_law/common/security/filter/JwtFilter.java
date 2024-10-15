@@ -1,7 +1,6 @@
-package tw.idv.frank.simple_standard_law.common.filter;
+package tw.idv.frank.simple_standard_law.common.security.filter;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -15,11 +14,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import tw.idv.frank.simple_standard_law.common.service.JwtService;
-import tw.idv.frank.simple_standard_law.common.service.RedisService;
+import tw.idv.frank.simple_standard_law.common.security.service.JwtService;
+import tw.idv.frank.simple_standard_law.common.redis.service.RedisService;
 import tw.idv.frank.simple_standard_law.common.tools.JsonTool;
 import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersFunc;
 import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersRes;

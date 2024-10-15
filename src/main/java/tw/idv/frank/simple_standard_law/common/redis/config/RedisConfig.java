@@ -1,4 +1,4 @@
-package tw.idv.frank.simple_standard_law.common.config;
+package tw.idv.frank.simple_standard_law.common.redis.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

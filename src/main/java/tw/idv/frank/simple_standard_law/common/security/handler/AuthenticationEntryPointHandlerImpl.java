@@ -1,4 +1,4 @@
-package tw.idv.frank.simple_standard_law.common.handler;
+package tw.idv.frank.simple_standard_law.common.security.handler;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

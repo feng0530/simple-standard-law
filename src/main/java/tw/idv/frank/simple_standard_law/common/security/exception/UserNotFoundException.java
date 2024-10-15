@@ -1,4 +1,4 @@
-package tw.idv.frank.simple_standard_law.common.exception;
+package tw.idv.frank.simple_standard_law.common.security.exception;
 
 import org.springframework.security.core.AuthenticationException;
 

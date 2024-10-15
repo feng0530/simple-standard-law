@@ -3,7 +3,7 @@ package tw.idv.frank.simple_standard_law.schema.system.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import tw.idv.frank.simple_standard_law.common.service.RedisService;
+import tw.idv.frank.simple_standard_law.common.redis.service.RedisService;
 import tw.idv.frank.simple_standard_law.schema.system.model.dao.UsersRoleMapper;
 import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersRoleReq;
 import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersRoleRes;

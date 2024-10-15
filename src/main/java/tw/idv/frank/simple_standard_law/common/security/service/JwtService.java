@@ -1,4 +1,4 @@
-package tw.idv.frank.simple_standard_law.common.service;
+package tw.idv.frank.simple_standard_law.common.security.service;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -8,13 +8,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import tw.idv.frank.simple_standard_law.common.redis.service.RedisService;
 import tw.idv.frank.simple_standard_law.common.tools.JsonTool;
 import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersDetails;
 import tw.idv.frank.simple_standard_law.schema.system.model.dto.UsersRes;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.UUID;
 
 @Slf4j
 @Service
