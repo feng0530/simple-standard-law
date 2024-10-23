@@ -1,9 +1,12 @@
 package tw.idv.frank.simple_standard_law.schema.report.service.impl;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import tw.idv.frank.simple_standard_law.common.constant.CommonCode;
@@ -15,10 +18,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class ReportServiceImpl implements ReportService {
 
@@ -31,7 +37,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public void runIR01(HttpServletResponse response) throws BaseException {
         // 取得已經編譯好的jasper檔案
-        ClassPathResource resource = new ClassPathResource("static/report/IR01/IR01.jasper");
+        ClassPathResource resource = new ClassPathResource("static/jasper/IR01/IR01.jasper");
 
         // 使用 try-with-resources 來自動管理資源
         try (
@@ -57,30 +63,35 @@ public class ReportServiceImpl implements ReportService {
 //            JasperPrint jasperPrint = JasperFillManager.fillReport(fis, param, jrds);
             JasperPrint jasperPrint = JasperFillManager.fillReport(fis, param, new JREmptyDataSource());
 
-//            // 設定回應的內容類型為PDF
-//            response.setContentType("application/pdf");
-//            // 設定回應的標頭，提示用戶端進行下載
-//            response.setHeader("Content-Disposition", "inline; filename=IR01.pdf");
+            String projectPath = Paths.get("").toAbsolutePath().toString();
+            String pdfStorageLocation = projectPath + "\\pdf\\IR01";
+            Path pdfDir = Paths.get(pdfStorageLocation);
+            if (!Files.exists(pdfDir)) {
+                Files.createDirectories(pdfDir);
+            }
+
+            // 組合檔案儲存的完整路徑
+            String filePath = pdfStorageLocation + "\\IR01.pdf";
+
             // 在指定路徑建立一個報表
-            JasperExportManager.exportReportToPdfFile(jasperPrint, "src/main/resources/static/report/IR01/IR01.pdf");
+            JasperExportManager.exportReportToPdfFile(jasperPrint, filePath);
 
         } catch (IOException | JRException e) {
-            // 處理異常，例如記錄日誌或回傳錯誤訊息
-            e.printStackTrace();
+            log.error(e.getMessage());
             throw new BaseException(CommonCode.REPORT_ERROR);
         }
     }
 
     @Override
     public String getIR01() throws BaseException {
-        String filePath = "src/main/resources/static/report/IR01/IR01.pdf";
-        File pdfFile = new File(filePath);
+        String projectPath = Paths.get("").toAbsolutePath().toString().concat("\\pdf\\IR01\\IR01.pdf");
 
         try {
+            File pdfFile = new File(projectPath);
             byte[] pdfBytes = Files.readAllBytes(pdfFile.toPath());
             return Base64.getEncoder().encodeToString(pdfBytes);
         } catch (IOException e) {
-            e.printStackTrace(); // 你可以根據需要處理異常
+            log.error(e.getLocalizedMessage());
             throw new BaseException(CommonCode.ERROR_904); // 返回空的字節數組以表示錯誤
         }
     }

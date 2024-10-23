@@ -20,4 +20,9 @@ public class BaseException extends Exception{
         this.code = code;
         this.mes = mes;
     }
+
+    @Override
+    public String getMessage() {
+        return this.mes;
+    }
 }

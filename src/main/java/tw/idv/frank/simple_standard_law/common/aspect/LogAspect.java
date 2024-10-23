@@ -30,7 +30,7 @@ public class LogAspect {
         try {
             result = joinPoint.proceed();
         } catch (Throwable throwable) {
-            log.error("{} threw exception: {}", methodName, throwable.getMessage());
+            log.error("[{}].[{}] threw exception: {}",className, methodName, throwable.getMessage());
             throw throwable;
         }
 
