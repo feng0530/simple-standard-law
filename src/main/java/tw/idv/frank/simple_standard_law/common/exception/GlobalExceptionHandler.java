@@ -26,7 +26,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BaseException.class)
     public CommonResult baseExceptionHandler(BaseException e) {
+        log.error(e.getMessage());
         return new CommonResult(e.getCode(), e.getMes());
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public CommonResult runtimeExceptionHandler(RuntimeException e) {
+        log.error(e.getMessage());
+        return new CommonResult(CommonCode.ERROR_999);
     }
 
     /**

@@ -16,7 +16,12 @@ public class LogAspect {
 
     }
 
-    @Around("schema()")
+    @Pointcut("execution(* tw.idv.frank.simple_standard_law.common.mail..*(..))")
+    public void mail() {
+
+    }
+
+    @Around("schema() || mail()")
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
         String className = joinPoint.getTarget().getClass().getSimpleName();
         String methodName = joinPoint.getSignature().getName();
