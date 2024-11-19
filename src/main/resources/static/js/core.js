@@ -36,5 +36,22 @@ system = {
             //     o.errorCallback(xhr, textStatus, errorThrown);
             // }
         });
+    },
+    block : function() {
+        $.blockUI({
+            message: '<h3>Loading...</h3>',
+            css: {
+                border: 'none',
+                padding: '15px',
+                backgroundColor: '#000',
+                '-webkit-border-radius': '10px',
+                '-moz-border-radius': '10px',
+                opacity: 0.7,
+                color: 'white'
+            }
+        });
+    },
+    unblock : function() {
+        $.unblockUI();
     }
 }

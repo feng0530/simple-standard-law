@@ -41,7 +41,13 @@ main = {
             var o = {
                 url: "/reports/" + report,
                 type: "POST",
+                contentType: "application/json",
                 Authorization: true,
+                data: {
+                    msg:"MQ",
+                    exchange:"Generate Report Exchange",
+                    routingKey:"report.IR01"
+                },
                 successCallback: function (res) {
 
                     if (res.msg !== "Success!") {
@@ -140,7 +146,12 @@ main = {
         $('#import-section').hide();
         $('#tab-content').show();
         $('#tab-content').html($(''));
-        $('#tab-content').html($(`<div><button class="btn btn-primary" id="getReport">查詢${reportName}</button></div>`));
+        $('#tab-content').html($(`
+            <div>
+                <button class="btn btn-primary" id="getReport">查詢${reportName}</button>
+                <a href="IR01/IR01.pdf">下載${reportName}</a>
+            </div>
+        `));
 
         $('#getReport').on('click', function () {
             main.getReport(reportName)
@@ -186,35 +197,37 @@ main = {
 
                 var pdfData = atob(base64);
                 var loadingTask = pdfjsLib.getDocument({ data: pdfData });
-                loadingTask.promise.then(function (pdf) {
-                    pdf.getPage(1).then(function (page) {
-                        // 設定縮放比例
-                        var scale = 2.0; // 可以根據需求調整到 2.0 或更高
+                loadingTask.promise.then(
+                    function (pdf) {
+                        pdf.getPage(1).then(function (page) {
+                            // 設定縮放比例
+                            var scale = 2.0; // 可以根據需求調整到 2.0 或更高
 
-                        // 獲取頁面的視口信息
-                        var viewport = page.getViewport({ scale: scale });
+                            // 獲取頁面的視口信息
+                            var viewport = page.getViewport({ scale: scale });
 
-                        var canvas = document.getElementById('pdf-canvas');
-                        var context = canvas.getContext('2d');
+                            var canvas = document.getElementById('pdf-canvas');
+                            var context = canvas.getContext('2d');
 
-                        // 設定 canvas 的實際大小
-                        canvas.width = viewport.width;  // 實際寬度
-                        canvas.height = viewport.height; // 實際高度
+                            // 設定 canvas 的實際大小
+                            canvas.width = viewport.width;  // 實際寬度
+                            canvas.height = viewport.height; // 實際高度
 
-                        // 設定 canvas 的 CSS 樣式，以保持顯示大小
-                        canvas.style.width = viewport.width / scale + 'px';  // 顯示寬度
-                        canvas.style.height = viewport.height / scale + 'px'; // 顯示高度
+                            // 設定 canvas 的 CSS 樣式，以保持顯示大小
+                            canvas.style.width = viewport.width / scale + 'px';  // 顯示寬度
+                            canvas.style.height = viewport.height / scale + 'px'; // 顯示高度
 
-                        // 渲染上下文設置
-                        var renderContext = {
-                            canvasContext: context,
-                            viewport: viewport
-                        };
+                            // 渲染上下文設置
+                            var renderContext = {
+                                canvasContext: context,
+                                viewport: viewport
+                            };
 
-                        // 渲染頁面
-                        page.render(renderContext);
-                    });
-                });
+                            // 渲染頁面
+                            page.render(renderContext);
+                        });
+                    }
+                );
             }
         }
         system.ajax(o);

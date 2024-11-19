@@ -9,6 +9,8 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js"></script>
     <script src="js/core.js"></script>
     <script src="js/constants.js"></script>
 </head>
@@ -31,6 +33,7 @@
                             <input type="password" id="password" class="form-control" placeholder="輸入您的密碼">
                         </div>
                         <button id="btn" type="button" class="btn btn-primary btn-block mt-4">登入</button>
+                        <button id="oauth_btn" type="button" class="btn btn-primary btn-block mt-4">Google 登入</button>
                     </form>
                 </div>
             </div>
@@ -41,7 +44,21 @@
 
 <script>
     $(document).ready(function() {
-
+        // 取得 URL 中的 JWT
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('jwt');
+        
+        if (token) {
+            system.block();
+            // 將 JWT 儲存在 localStorage
+            localStorage.setItem('jwt', token);
+            
+            // 模擬延遲，並跳轉到主頁
+            setTimeout(() => {
+                window.location.href = "main.html";
+            }, 500); // 可調整延遲時間
+        }
+        
         $('#username').focus();
 
         $(document).keyup(function(e) {
@@ -68,17 +85,25 @@
                     },
                     successCallback: function(res) {
                         if (res.code !== 200) {
+                            system.unblock();
                             alert(res.result);
                             return;
                         }
                         localStorage.setItem('jwt', res.result.accessToken);
-                        window.location.href = 'main.html'; // 重定向到主頁面
+                        setTimeout(() => {
+                            window.location.href = "main.html";
+                        }, 500); // 可調整延遲時間
                     }
                 };
                 system.ajax(o);
+                system.block();
             } else {
                 alert('請輸入使用者名稱和密碼');
             }
+        });
+
+        $('#oauth_btn').on('click', function() {
+            window.location.href = '/oauth2/authorization/google';
         });
     });
 

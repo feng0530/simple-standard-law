@@ -1,0 +1,89 @@
+spring.application.name=${YOUR_APPLICATION_NAME}
+server.port=${YOUR_SERVER_PORT}
+
+# DB相關設置
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.datasource.url=jdbc:postgresql://${YOUR_DB_IP}:5432/SimpleStandardLaw
+spring.datasource.username=postgres
+spring.datasource.password=${YOUR_DB_PASSWORD}
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.show-sql=true
+#spring.jpa.hibernate.ddl-auto=update
+
+# MyBatis .xml的檔案位置
+mybatis.mapper-locations=classpath:/mapper/*.xml
+
+# 時區及時間格式
+spring.jackson.time-zone=GMT+8
+spring.jackson.date-format=yyyy-MM-dd HH:mm:ss
+
+# Security 預設登入頁的帳密
+#spring.security.user.name=user
+#spring.security.user.password=123456
+
+# 單一檔案上傳的大小限制
+spring.servlet.multipart.max-file-size=7MB
+# 單一請求的大小限制
+spring.servlet.multipart.max-request-size=10MB
+
+# Redis
+spring.data.redis.database=15
+
+# Flyway
+spring.flyway.enabled=true
+spring.flyway.url=${spring.datasource.url}
+spring.flyway.user=${spring.datasource.username}
+spring.flyway.password=${YOUR_DB_PASSWORD}
+spring.flyway.locations=classpath:db/migration
+spring.flyway.schemas=system
+spring.flyway.baseline-version=1.0
+spring.flyway.baseline-on-migrate=true
+spring.flyway.validate-on-migrate=true
+spring.flyway.out-of-order=false
+
+# DevTools
+# 當前端代碼變更時，瀏覽器會自動重新載入
+spring.devtools.livereload.enabled=true
+# 監控 Java代碼，若有變更會則自動重啟，且只會載入變更的部分，故重啟速度更快
+spring.devtools.restart.enabled=true
+
+# RabbitMQ 主機配置
+spring.rabbitmq.host=localhost
+spring.rabbitmq.port=5672
+
+# RabbitMQ 管理頁面
+spring.rabbitmq.username=guest
+spring.rabbitmq.password=${YOUR-RABBITMQ_PASSWORD}
+
+# Gmail
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=${YOUR_MAIL_USERNAME}
+# 從 Gmail取得的應用程式密碼
+spring.mail.password=${YOUR_MAIL_PASSWORD}
+# 表示啟用 SMTP 身份驗證。郵件服務器會要求提供用戶名和密碼進行身份驗證，這樣可以確保只有經授權的用戶才能發送郵件。
+spring.mail.properties.mail.smtp.auth=true
+# 啟用傳輸層安全性 (TLS)，用於加密客戶端和郵件服務器之間的連接。啟用此設置後，郵件內容在傳輸過程中會被加密，防止被第三方攔截或竊取。
+spring.mail.properties.mail.smtp.starttls.enable=true
+# 表示要求使用 TLS。若目標郵件服務器不支持 TLS，則不會允許發送郵件。這樣可以強制加密郵件傳輸，確保更高的安全性。
+spring.mail.properties.mail.smtp.starttls.required=true
+
+# Google OAuth2.0登入設定
+spring.security.oauth2.client.registration.google.client-id=${YOUR_OAUTH_CLIENT_ID}
+spring.security.oauth2.client.registration.google.client-secret=${YOUR_OAUTH_CLIENT_SECRET}
+spring.security.oauth2.client.registration.google.scope=profile,email
+spring.security.oauth2.client.registration.google.redirect-uri={baseUrl}/login/oauth2/code/{registrationId}
+spring.security.oauth2.client.registration.google.client-name=google
+
+# 自簽名憑證
+server.ssl.key-store=classpath:keystore.p12
+server.ssl.key-store-password=${SSL_KEY_STORE_PASSWORD}
+server.ssl.key-store-type=PKCS12
+server.ssl.key-alias=myalias
+
+# ==============================
+#          其他參數
+# ==============================
+jwt.expiration=300000
+domain=https://localhost:8080
+#domain=https://simple-standard-law:8080

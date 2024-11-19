@@ -59,7 +59,7 @@ public class UsersServiceImpl implements UsersService {
         String jwt = jwtService.createToken(usersDetails);
         String userId = String.valueOf(usersDetails.getUsers().getUserId());
         redisService.addJwtToOnlineList(userId);
-        return  new LoginRes(jwt);
+        return new LoginRes(jwt);
     }
 
     @Override

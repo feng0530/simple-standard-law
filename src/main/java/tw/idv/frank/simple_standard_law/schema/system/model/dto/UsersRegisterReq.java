@@ -3,7 +3,9 @@ package tw.idv.frank.simple_standard_law.schema.system.model.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 public class UsersRegisterReq {
@@ -19,6 +21,12 @@ public class UsersRegisterReq {
 
     @NotBlank
     private String password;
+
+    public UsersRegisterReq(String userName, String account) {
+        this.userName = userName;
+        this.account = account;
+        this.password = "OAuthTest";
+    }
 
     @Override
     public String toString() {
