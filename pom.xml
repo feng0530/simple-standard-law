@@ -34,12 +34,25 @@
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
-			<optional>true</optional> <!-- 避免它進入生產環境 -->
+			<optional>true</optional> <!-- 不會被傳遞給依賴此專案的下游專案 -->
+			<scope>provided</scope> <!-- 表示該依賴僅在開發或測試階段需要，不會被打包至 War/Jar -->
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

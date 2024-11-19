@@ -15,12 +15,7 @@ public class JsonTool {
     static ObjectMapper mapper = new ObjectMapper();
 
     public static String toJson(Object obj) {
-        try {
-            return gson.toJson(obj);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-        return null;
+        return gson.toJson(obj);
     }
 
 

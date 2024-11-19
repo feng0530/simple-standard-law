@@ -1,16 +1,17 @@
 package tw.idv.frank.simple_standard_law.schema.report.service.impl;
 
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
+
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jasperreports.engine.*;
 import org.modelmapper.ModelMapper;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import tw.idv.frank.simple_standard_law.common.constant.CommonCode;
 import tw.idv.frank.simple_standard_law.common.exception.BaseException;
+import tw.idv.frank.simple_standard_law.common.mail.service.MailService;
+import tw.idv.frank.simple_standard_law.common.rabbit.dto.RabbitMsg;
 import tw.idv.frank.simple_standard_law.schema.report.service.ReportService;
 import tw.idv.frank.simple_standard_law.schema.system.model.dao.UsersMapper;
 
@@ -34,15 +35,33 @@ public class ReportServiceImpl implements ReportService {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private MailService mailService;
+
     @Override
-    public void runIR01(HttpServletResponse response) throws BaseException {
+    public void addTaskToReportQueue(RabbitMsg msg) {
+        rabbitTemplate.convertAndSend(msg.getExchange(), msg.getRoutingKey(), msg);
+    }
+
+    @Override
+    public String runIR01Test() {
+        String msg = runIR01();
+        mailService.sendSimpleEmail(new RabbitMsg());
+        return msg;
+    }
+
+    @Override
+    public String runIR01() {
         // 取得已經編譯好的jasper檔案
         ClassPathResource resource = new ClassPathResource("static/jasper/IR01/IR01.jasper");
 
         // 使用 try-with-resources 來自動管理資源
         try (
                 FileInputStream fis = new FileInputStream(resource.getFile());
-             ) {
+        ) {
 
 //            List<UsersRes> usersList = usersMapper.findUsersList().stream()
 //                    .map(users -> modelMapper.map(users, UsersRes.class))
@@ -76,9 +95,10 @@ public class ReportServiceImpl implements ReportService {
             // 在指定路徑建立一個報表
             JasperExportManager.exportReportToPdfFile(jasperPrint, filePath);
 
+            return CommonCode.SUCCESS.getMes();
         } catch (IOException | JRException e) {
             log.error(e.getMessage());
-            throw new BaseException(CommonCode.REPORT_ERROR);
+            return CommonCode.REPORT_ERROR.getMes();
         }
     }
 
