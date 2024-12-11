@@ -20,6 +20,9 @@ $(document).ready(function () {
 
 main = {
     init: function () {
+        main.lineNotify();
+        main.getLineToken();
+
         // 綁定側邊欄點擊事件來加載對應內容
         $('#sidebar').on('click', 'a', function (e) {
             e.preventDefault();
@@ -96,6 +99,7 @@ main = {
                 successCallback: function (res) {
                     if (res.msg === "Success!") {
                         localStorage.removeItem('jwt');
+                        localStorage.removeItem('line_token');
                         alert("登出成功!");
                         window.location.href = 'login.html';
                     }
@@ -910,5 +914,57 @@ main = {
                 }
             });
         })
+    },
+    lineNotify : function (){
+
+        $('#notify').on('click', function (){
+
+            let line_token = localStorage.getItem('line_token')
+            if (line_token) {
+                var o = {
+                    url: `/line/sendPicture?token=${line_token}`,
+                    type: "POST",
+                    contentType: "application/json",
+                    Authorization: true,
+                    successCallback: function (res) {
+                        alert("已發送 LineNotify通知!");
+                    }
+                }
+            } else {
+                var o = {
+                    url: "/line/authorize",
+                    type: "GET",
+                    Authorization: true,
+                    successCallback: function (res) {
+                        window.location.href = res.result;
+                    }
+                }
+            }
+            system.ajax(o);
+        })
+    },
+    getLineToken : function (){
+        const params = new URLSearchParams(window.location.search);
+        const code = params.get("code"); // 取得名為 'code' 的參數值
+
+        if (code) {
+            const params = new URLSearchParams(window.location.search);
+            const code = params.get("code"); // 取得名為 'code' 的參數值
+
+            if (code) {
+                var o = {
+                    url: `/line/getToken?code=${code}`,
+                    type: "POST",
+                    Authorization: true,
+                    successCallback: function (res) {
+                        localStorage.setItem('line_token', res.result.access_token);
+                        window.location.href = '/main.html';
+                    }
+                }
+                system.ajax(o);
+            }
+        } else {
+            console.log("No authorization code found in the URL.");
+        }
     }
 }

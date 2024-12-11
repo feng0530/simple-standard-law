@@ -40,6 +40,7 @@ public class OAuth2AuthenticationSuccessHandlerImpl implements AuthenticationSuc
     @Autowired
     private RedisService redisService;
 
+    // 開啟第三方登入的小視窗頁面，登入成功後關閉小視窗
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         log.info("Start OAuth2 with Google...");
@@ -53,9 +54,41 @@ public class OAuth2AuthenticationSuccessHandlerImpl implements AuthenticationSuc
 
         Users user = findUser(attributes);
         String jwt = login(user);
-        response.sendRedirect(domain + "/login.html?jwt=" + jwt);
+
+        // 返回一個 HTML 頁面
+        response.setContentType("text/html");
+        response.getWriter().write(
+                "<!DOCTYPE html>" +
+                        "<html lang=\"en\">" +
+                        "<head><title>OAuth2 Success</title></head>" +
+                        "<body>" +
+                        "<script>" +
+                        "   window.opener.postMessage({ jwt: '" + jwt + "' }, window.location.origin);" + // 傳送 JWT 給主頁面
+                        "   window.close();" + // 關閉彈出視窗
+                        "</script>" +
+                        "</body>" +
+                        "</html>"
+        );
+
         log.info("End OAuth2 with Google...");
     }
+//    // 從登入頁直接跳轉至第三方登入頁面，登入成功後再跳轉回首頁
+//    @Override
+//    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+//        log.info("Start OAuth2 with Google...");
+//        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+//
+//        // 取得用戶的資料屬性
+//        Map<String, Object> attributes = oAuth2User.getAttributes();
+//        attributes.forEach((key, value) -> {
+//            log.info("{}: {}", key, value);
+//        });
+//
+//        Users user = findUser(attributes);
+//        String jwt = login(user);
+//        response.sendRedirect(domain + "/login.html?jwt=" + jwt);
+//        log.info("End OAuth2 with Google...");
+//    }
 
     private Users findUser(Map<String, Object> attributes) {
         Users user = usersMapper.findByAccount((String) attributes.get("email"));

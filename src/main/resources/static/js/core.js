@@ -23,6 +23,7 @@ system = {
                 if (response.msg === "請重新登入!") {
                     alert(response.msg);
                     localStorage.removeItem('jwt');
+                    localStorage.removeItem('line_token');
                     window.location.href = "login.html";
                 } else {
                     o.successCallback(response);

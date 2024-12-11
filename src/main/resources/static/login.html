@@ -102,8 +102,53 @@
             }
         });
 
+        // 當前頁面直接跳轉至第三方登入頁面，登入成功後再跳轉回首頁
+        // $('#oauth_btn').on('click', function() {
+        //     window.location.href = '/oauth2/authorization/google';
+        // });
+
+        // 開啟第三方登入的小視窗頁面，登入成功後關閉小視窗
         $('#oauth_btn').on('click', function() {
-            window.location.href = '/oauth2/authorization/google';
+            // 視窗的寬和高
+            const width = 500;
+            const height = 500;
+
+            // 計算螢幕中央的位置
+            const screenLeft = window.screenLeft !== undefined ? window.screenLeft : window.screenX;
+            const screenTop = window.screenTop !== undefined ? window.screenTop : window.screenY;
+
+            const screenWidth = window.innerWidth || document.documentElement.clientWidth || screen.width;
+            const screenHeight = window.innerHeight || document.documentElement.clientHeight || screen.height;
+
+            const left = screenLeft + (screenWidth - width) / 2;
+            const top = screenTop + (screenHeight - height) / 2;
+            // 使用 window.open 彈出視窗
+            const popup = window.open(
+                '/oauth2/authorization/google',
+                'GoogleOAuth',
+                `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+            );
+
+            // 監聽彈窗傳回的資料
+            window.addEventListener('message', function(event) {
+                if (event.origin !== window.location.origin) {
+                    // 確保資料來源是可信的
+                    console.warn('Untrusted origin:', event.origin);
+                    return;
+                }
+
+                // 接收 JWT 並更新主頁面
+                const jwt = event.data.jwt;
+                if (jwt) {
+                    system.block();
+                    // 可以將 JWT 存儲到 localStorage 或更新頁面狀態
+                    localStorage.setItem('jwt', jwt);
+                    // 模擬延遲，並跳轉到主頁
+                    setTimeout(() => {
+                        window.location.href = "main.html";
+                    }, 500); // 可調整延遲時間
+                }
+            });
         });
     });
 

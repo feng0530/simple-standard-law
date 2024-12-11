@@ -14,14 +14,6 @@ public class MailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    @Value("${spring.mail.password}")
-    private String ps;
-
-    @PostConstruct
-    public void printPassword() {
-        System.out.println("Spring Mail Password: " + ps);
-    }
-
     public void sendSimpleEmail(RabbitMsg msg) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo("fff80705@gmail.com");
